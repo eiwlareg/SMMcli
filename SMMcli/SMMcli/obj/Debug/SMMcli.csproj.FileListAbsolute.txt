@@ -1,0 +1,7 @@
+C:\Users\Geralwie\source\repos\SMMcli\SMMcli\bin\Debug\SMMcli.exe.config
+C:\Users\Geralwie\source\repos\SMMcli\SMMcli\bin\Debug\SMMcli.exe
+C:\Users\Geralwie\source\repos\SMMcli\SMMcli\bin\Debug\SMMcli.pdb
+C:\Users\Geralwie\source\repos\SMMcli\SMMcli\obj\Debug\SMMcli.csprojResolveAssemblyReference.cache
+C:\Users\Geralwie\source\repos\SMMcli\SMMcli\obj\Debug\SMMcli.csproj.CoreCompileInputs.cache
+C:\Users\Geralwie\source\repos\SMMcli\SMMcli\obj\Debug\SMMcli.exe
+C:\Users\Geralwie\source\repos\SMMcli\SMMcli\obj\Debug\SMMcli.pdb
