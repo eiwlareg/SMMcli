@@ -50,40 +50,39 @@ namespace SMMcli
     }
     class SmmcliFunction
     {
-        
-        internal class Snapshot
-        {
-            List<string> fd = new List<string>();
-            public Snapshot(string dir)
-            {
-                string[] dirs = Directory.GetDirectories(dir);
-                string[] files = Directory.GetFiles(dir);
-                foreach (string d in dirs)
-                {
-                    Console.Write("looking at {0}\n", d);
-                    new Snapshot(d);
-                    fd.Add(d);
-                }
-                foreach (string f in files)
-                {
-                    Console.Write("looking at {0}\n", f);
-                    fd.Add(f);
-                }
-                string[] content = fd.ToArray();
-                WriteFile("gameconf.text", content, "DEFAULT");
-                return;
-            }
-        }
+
         public static void WriteFile(string fileName, string[] content, string path)
         {
-            if(path == "DEFAULT")
+            if (path == "DEFAULT")
             {
                 path = Directory.GetCurrentDirectory();
             }
-            try
+            if(!File.Exists(path + "\\" + fileName))
+            {
+                try
+                {
+                    using (StreamWriter file =
+                    new StreamWriter(path + "\\" + fileName))
+                    {
+                        foreach (string line in content)
+                        {
+                            file.WriteLine(line);
+                            Console.Write("Writing file ...\n");
+                        }
+                    }
+                    Console.Write(path + "\\" + fileName + " created...\n");
+                    return;
+                }
+                catch
+                {
+                    Console.Write("Failed to write {0}\n", fileName);
+
+                }
+            }
+            else
             {
                 using (StreamWriter file =
-                new StreamWriter(path + "\\" + fileName))
+                    new StreamWriter(path + "\\" + fileName, true))
                 {
                     foreach (string line in content)
                     {
@@ -93,13 +92,37 @@ namespace SMMcli
                 }
                 Console.Write(path + "\\" + fileName + " created...\n");
                 return;
-            }
-            catch
-            {
-                Console.Write("Failed to write {0}\n", fileName);
-
-            }
+            } 
+            
             return;
+        }
+
+        internal class Snapshot
+        {
+            public List<string> fd = new List<string>();
+            public Snapshot(string dir, string fileName)
+            {
+                string[] dirs = Directory.GetDirectories(dir);
+                string[] files = Directory.GetFiles(dir);
+                foreach (string d in dirs)
+                {
+                    Console.Write("looking at {0}\n", d);
+                    new Snapshot(d,fileName);
+                    fd.Add(d);
+                }
+                foreach (string f in files)
+                {
+                    Console.Write("looking at {0}\n", f);
+                    fd.Add(f);
+                }
+                string[] content = fd.ToArray();
+                foreach (string line in content)
+                {
+                    Console.Write(line + "\n");
+                }
+                WriteFile(fileName, content, "DEFAULT");
+                return;
+            }
         }
 
         public static void Menu(string arg)
@@ -114,7 +137,7 @@ namespace SMMcli
                     name = name + ".txt";
                     try
                     {
-                        new Snapshot(path);
+                        new Snapshot(path,name);
                         Console.Write("Erfolg!\n");
                     }
                     catch
