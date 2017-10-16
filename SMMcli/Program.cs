@@ -57,7 +57,8 @@ namespace SMMcli
             {
                 path = Directory.GetCurrentDirectory();
             }
-            if(!File.Exists(path + "\\" + fileName))
+            int i = 0;
+            if (!File.Exists(path + "\\" + fileName))
             {
                 try
                 {
@@ -66,8 +67,10 @@ namespace SMMcli
                     {
                         foreach (string line in content)
                         {
+                            
                             file.WriteLine(line);
                             Console.Write("Writing file ...\n");
+                            i++;
                         }
                     }
                     Console.Write(path + "\\" + fileName + " created...\n");
@@ -76,7 +79,6 @@ namespace SMMcli
                 catch
                 {
                     Console.Write("Failed to write {0}\n", fileName);
-
                 }
             }
             else
@@ -87,10 +89,20 @@ namespace SMMcli
                     foreach (string line in content)
                     {
                         file.WriteLine(line);
-                        Console.Write("Writing file ...\n");
+                        
+                        i++;
+                        if(i % 2 == 0)
+                        {
+                            
+                            Console.Write(":");
+                        } 
+                        else
+                        {
+                            
+                            Console.Write("=");
+                        }
                     }
                 }
-                Console.Write(path + "\\" + fileName + " created...\n");
                 return;
             } 
             
@@ -106,20 +118,16 @@ namespace SMMcli
                 string[] files = Directory.GetFiles(dir);
                 foreach (string d in dirs)
                 {
-                    Console.Write("looking at {0}\n", d);
+                    //Console.Write("looking at {0}\n", d);
                     new Snapshot(d,fileName);
                     fd.Add(d);
                 }
                 foreach (string f in files)
                 {
-                    Console.Write("looking at {0}\n", f);
+                    //Console.Write("looking at {0}\n", f);
                     fd.Add(f);
                 }
                 string[] content = fd.ToArray();
-                foreach (string line in content)
-                {
-                    Console.Write(line + "\n");
-                }
                 WriteFile(fileName, content, "DEFAULT");
                 return;
             }
@@ -138,15 +146,19 @@ namespace SMMcli
                     try
                     {
                         new Snapshot(path,name);
-                        Console.Write("Erfolg!\n");
+                        Console.Write("\nErfolg!");
                     }
-                    catch
+                    catch(Exception ex)
                     {
-                        Console.Write("Fehler! HAHA\n");
+                        Console.Write("\n#########################################################");
+                        Console.Write("\n### Fehler!\n#### {0}\n#### Press any key to proceed ...", ex.Message);
+                        Console.Write("\n#########################################################");
+                        Console.ReadKey();
+                        Console.Clear();
                     }
                     finally
                     {
-                        Console.Write("Exiting ... \n");
+                        Console.Write("\nExiting ...");
                     }
                     break;
                 case "2":
