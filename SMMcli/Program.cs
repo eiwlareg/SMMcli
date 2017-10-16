@@ -50,14 +50,45 @@ namespace SMMcli
     }
     class SmmcliFunction
     {
-
+        public async static void Loading(bool arg)
+        {
+            int i = 0;
+            do
+            {
+                if (i == 0)
+                {
+                     i++;
+                     Console.Write("\r-");
+                     await Task.Delay(1000);
+                }
+                else if (i == 1)
+                        {
+                            i++;
+                            Console.Write("\r/");
+                            await Task.Delay(1000);
+                        }
+                else if (i == 2)
+                {
+                    i++;
+                    Console.Write("\r|");
+                    await Task.Delay(1000);
+                }
+                else if (i == 3)
+                {
+                    i = 0;
+                    Console.Write("\r\\");
+                    await Task.Delay(1000);
+                }
+                    Console.Clear();
+                } while (arg == true);
+                return;
+        }
         public static void WriteFile(string fileName, string[] content, string path)
         {
             if (path == "DEFAULT")
             {
                 path = Directory.GetCurrentDirectory();
             }
-            int i = 0;
             if (!File.Exists(path + "\\" + fileName))
             {
                 try
@@ -69,11 +100,11 @@ namespace SMMcli
                         {
                             
                             file.WriteLine(line);
-                            Console.Write("Writing file ...\n");
-                            i++;
+                            //Console.Write("Writing file ...\n");
+                            
                         }
                     }
-                    Console.Write(path + "\\" + fileName + " created...\n");
+                    //Console.Write(path + "\\" + fileName + " created...\n");
                     return;
                 }
                 catch
@@ -83,43 +114,38 @@ namespace SMMcli
             }
             else
             {
-                using (StreamWriter file =
-                    new StreamWriter(path + "\\" + fileName, true))
+                try
                 {
-                    foreach (string line in content)
+                    using (StreamWriter file =
+                    new StreamWriter(path + "\\" + fileName, true))
                     {
-                        file.WriteLine(line);
-                        
-                        i++;
-                        if(i % 2 == 0)
+                        foreach (string line in content)
                         {
-                            
-                            Console.Write(":");
-                        } 
-                        else
-                        {
-                            
+                            file.WriteLine(line);
                             Console.Write("=");
                         }
                     }
                 }
+                catch
+                {
+                    Console.Write("Failed to access {0}\n", fileName);
+                }
                 return;
-            } 
-            
+            }
             return;
         }
 
         internal class Snapshot
         {
-            public List<string> fd = new List<string>();
             public Snapshot(string dir, string fileName)
             {
+                List<string> fd = new List<string>();
                 string[] dirs = Directory.GetDirectories(dir);
                 string[] files = Directory.GetFiles(dir);
                 foreach (string d in dirs)
                 {
                     //Console.Write("looking at {0}\n", d);
-                    new Snapshot(d,fileName);
+                    new Snapshot(d, fileName);
                     fd.Add(d);
                 }
                 foreach (string f in files)
