@@ -116,6 +116,7 @@ namespace SMMcli
             {
                 try
                 {
+                    Console.Write(">");
                     using (StreamWriter file =
                     new StreamWriter(path + "\\" + fileName, true))
                     {
@@ -129,6 +130,10 @@ namespace SMMcli
                 catch
                 {
                     Console.Write("Failed to access {0}\n", fileName);
+                }
+                finally
+                {
+                    Console.Write("<");
                 }
                 return;
             }
@@ -144,9 +149,17 @@ namespace SMMcli
                 string[] files = Directory.GetFiles(dir);
                 foreach (string d in dirs)
                 {
-                    //Console.Write("looking at {0}\n", d);
-                    new Snapshot(d, fileName);
-                    fd.Add(d);
+                    try
+                    {
+                        new Snapshot(d, fileName);
+                        fd.Add(d);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write("\n#########################################################");
+                        Console.Write("\n### Fehler!\n#### {0}", ex.Message);
+                        Console.Write("\n#########################################################");
+                    }
                 }
                 foreach (string f in files)
                 {
@@ -169,23 +182,8 @@ namespace SMMcli
                     Console.Write("Name of snapshot:\n");
                     string name = Console.ReadLine();
                     name = name + ".txt";
-                    try
-                    {
                         new Snapshot(path,name);
                         Console.Write("\nErfolg!");
-                    }
-                    catch(Exception ex)
-                    {
-                        Console.Write("\n#########################################################");
-                        Console.Write("\n### Fehler!\n#### {0}\n#### Press any key to proceed ...", ex.Message);
-                        Console.Write("\n#########################################################");
-                        Console.ReadKey();
-                        Console.Clear();
-                    }
-                    finally
-                    {
-                        Console.Write("\nExiting ...");
-                    }
                     break;
                 case "2":
                     Console.WriteLine("Case 2");
